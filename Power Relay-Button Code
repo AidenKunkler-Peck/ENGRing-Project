@@ -1,0 +1,164 @@
+
+// First we'll set up constants for the pin numbers.
+// This will make it easier to follow the code below.
+
+const int button1Pin = A0;  // pushbutton 1 pin
+const int button2Pin = A1;
+const int button3Pin = A2;
+const int button4Pin = A3;
+const int relayPin =  45; 
+bool count1 = false;
+bool count2 = false;
+bool count3 = false;
+bool count4 = false;
+const int RED_PINA = 2;
+const int GREEN_PINA = 3;
+const int BLUE_PINA = 4;
+const int RED_PINB = 5;
+const int GREEN_PINB = 6;
+const int BLUE_PINB = 7;
+const int RED_PINC = 8;
+const int GREEN_PINC = 9;
+const int BLUE_PINC = 10;
+const int RED_PIND = 31;
+const int GREEN_PIND = 33; 
+const int BLUE_PIND = 35;
+int counterA = 0;
+int counterB = 0;
+int counterC = 0;
+int counterD = 0;
+
+void setup(){
+
+  // Set up the pushbutton pins to be an input:
+  pinMode(button1Pin, INPUT_PULLUP);
+  pinMode(button2Pin, INPUT_PULLUP);
+  pinMode(button3Pin, INPUT_PULLUP);
+  pinMode(button4Pin, INPUT_PULLUP);
+  pinMode(relayPin, OUTPUT);
+  pinMode(RED_PINA, OUTPUT);
+  pinMode(GREEN_PINA, OUTPUT);
+  pinMode(RED_PINB, OUTPUT);
+  pinMode(GREEN_PINB, OUTPUT);
+  pinMode(RED_PINC, OUTPUT);
+  pinMode(GREEN_PINC, OUTPUT);
+  pinMode(RED_PIND, OUTPUT);
+  pinMode(GREEN_PIND, OUTPUT);
+  
+Serial.begin(9600);
+digitalWrite(relayPin, HIGH);
+}
+void loop()
+{
+  //int button1State;  // variables to hold the pushbutton states
+
+  // Since a pushbutton has only two states (pushed or not pushed),
+  // we've run them into digital inputs. To read an input, we'll
+  // use the digitalRead() function. This function takes one
+  // parameter, the pin number, and returns either HIGH (5V)
+  // or LOW (GND).
+
+  // Here we'll read the current pushbutton states into
+  // two variables:
+  
+
+  int button1State = digitalRead(button1Pin);
+  int button2State = digitalRead(button2Pin);
+  int button3State = digitalRead(button3Pin);
+  int button4State = digitalRead(button4Pin);
+  
+  
+  if (((button1State == LOW)))  // if we're pushing button 1 
+  {
+     Serial.print("Buttonstate1: ");
+     Serial.println(button1State);
+     counterA ++;
+     delay(500);
+      if (counterA == 1) {
+       digitalWrite(RED_PINA, LOW);
+      digitalWrite(GREEN_PINA, HIGH);
+      //digitalWrite(BLUE_PIN, LOW);
+     }
+     if (counterA == 2){
+      digitalWrite(RED_PINA, HIGH);
+      digitalWrite(GREEN_PINA, LOW);
+      count1 = true;
+     }
+     if (counterA == 500) {
+      digitalWrite(RED_PINA, LOW);
+      digitalWrite(GREEN_PINA, HIGH);
+      counterA = 1;
+     }
+}
+  if (((button2State == LOW))) {
+    Serial.print("Buttonstate2: ");
+    Serial.println(button2State);
+    counterB ++;
+    delay(500);
+    if (counterB == 1) {
+     digitalWrite(RED_PINB, LOW);
+    digitalWrite(GREEN_PINB, HIGH);
+    //digitalWrite(BLUE_PIN, LOW);
+   }
+   if (counterB == 2){
+    digitalWrite(RED_PINB, HIGH);
+    digitalWrite(GREEN_PINB, LOW);
+    count2 = true;
+   }
+   if (counterB == 500) {
+    digitalWrite(RED_PINB, LOW);
+    digitalWrite(GREEN_PINB, HIGH);
+    counterB = 1;
+   }
+  }
+ if (((button3State == LOW))) {
+    Serial.print("Buttonstate3: ");
+    Serial.println(button3State);
+    counterC ++;
+    delay(500);
+    if (counterC == 1) {
+    digitalWrite(RED_PINC, LOW);
+    digitalWrite(GREEN_PINC, HIGH);
+    //digitalWrite(BLUE_PIN, LOW);
+   }
+   if (counterC == 2){
+    digitalWrite(RED_PINC, HIGH);
+    digitalWrite(GREEN_PINC, LOW);
+    count3 = true;
+   }
+   if (counterC == 500) {
+    digitalWrite(RED_PINC, LOW);
+    digitalWrite(GREEN_PINC, HIGH);
+    counterC = 1;
+   }
+  }
+
+ if (((button4State == LOW)))  // if we're pushing button 1 
+  {
+     Serial.print("Buttonstate4: ");
+     Serial.println(button4State);
+     counterD ++;
+     delay(500);
+      if (counterD == 1) {
+       digitalWrite(RED_PIND, LOW);
+      digitalWrite(GREEN_PIND, HIGH);
+      //digitalWrite(BLUE_PIN, LOW);
+     }
+     if (counterD == 2){
+      digitalWrite(RED_PIND, HIGH);
+      digitalWrite(GREEN_PIND, LOW);
+      count4 = true;
+     }
+     if (counterD == 500) {
+      digitalWrite(RED_PIND, LOW);
+      digitalWrite(GREEN_PIND, HIGH);
+      counterD = 1;
+     }
+   }
+
+
+if (count1 and count2 and count3 and count4){
+    digitalWrite(relayPin, LOW);
+    Serial.println("Yay");
+   }
+}
