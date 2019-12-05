@@ -1,0 +1,93 @@
+#include <Wire.h>
+
+#define DISPLAY_ADDRESS1 0x72 //This is the default address of the OpenLCD
+
+#include <Keypad.h>
+
+const byte ROWS = 4; //four rows
+
+const byte COLS = 3; //three columns
+
+char keys[ROWS][COLS] = {
+
+  {'M','Q','O'},
+
+  {'X','Y','Z'},
+
+  {'D','I','E'},
+
+  {'L','S','H'}
+
+};
+
+byte rowPins[ROWS] = {8, 2, 3, 4}; //connect to the row pinouts of the keypad
+
+byte colPins[COLS] = {5, 6, 7}; //connect to the column pinouts of the keypad
+
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+String str = "";
+String combo = "SHIELD";
+void setup()
+{
+  Wire.begin(); //Join the bus as master
+
+  //By default .begin() will set I2C SCL to Standard Speed mode of 100kHz
+  //Wire.setClock(400000); //Optional - set I2C SCL to High Speed Mode of 400kHz
+
+  Serial.begin(9600); //Start serial communication at 9600 for debug statements
+  Serial.println("OpenLCD Example Code");
+
+  //Send the reset command to the display - this forces the cursor to return to the beginning of the display
+  Wire.beginTransmission(DISPLAY_ADDRESS1);
+  Wire.write('|'); //Put LCD into setting mode
+  Wire.write('-'); //Send clear display command
+  Wire.endTransmission();
+}
+
+void loop()
+{
+  char key = keypad.getKey();
+  
+  if (key){
+    str = str + key;
+    if(str.length() == 7){
+      str = "";
+    }
+    
+  }
+
+
+  Wire.beginTransmission(DISPLAY_ADDRESS1); // transmit to device #1
+
+  Wire.write('|'); //Put LCD into setting mode
+  Wire.write('-'); //Send clear display command
+  
+  Wire.print("Enter Password: ");
+  Wire.print(str);
+  
+  if(str.length() == 6) {
+    if (str == "SHIELD"){
+      Wire.beginTransmission(DISPLAY_ADDRESS1);
+      Wire.write('|'); 
+      Wire.write('-');
+      Wire.print("ToolBox Combo:  3-2-1  ");
+    }
+    else {
+      Wire.beginTransmission(DISPLAY_ADDRESS1);
+      Wire.write('|'); 
+      Wire.write('-');
+      Wire.print("Incorrect       Passcode");
+  }
+ }
+ 
+  Wire.endTransmission(); //Stop I2C transmission
+
+  delay(50); //The maximum update rate of OpenLCD is about 100Hz (10ms). A smaller delay will cause flicker
+ 
+}
+
+//Given a number, i2cSendValue chops up an integer into four values and sends them out over I2C
+void clearString()
+{
+str = "";
+}
